@@ -1,0 +1,155 @@
+<main id="app">
+  <div class="container mt-4">
+    <!-- Nút Thêm mới bài thi -->
+    <button class="btn btn-primary mb-4" (click)="showModal()">Thêm mới câu trả lời</button>
+
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Câu trả lời</li>
+      </ol>
+    </nav>
+
+    <!-- Table Content -->
+    <table class="table table-bordered">
+      <thead class="table-light">
+      <tr>
+        <th colspan="8" class="text-start font-weight-bold">Danh sách câu trả lời</th>
+      </tr>
+      <tr>
+        <th>STT</th>
+        <th>Mã câu trả lời</th>
+        <th>Tên câu trả lời</th>
+        <th>TextContent</th>
+        <th>Hình ảnh</th>
+        <th>Istrue</th>
+        <th>Ngày tạo</th>
+        <th>Ngày cập nhật</th>
+        <th>Mã câu hỏi</th>
+        <th>Thao tác</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of data">
+        <td>{{ item.answerID }}</td>
+        <td>{{ item.answerCode }}</td>
+        <td>{{ item.answerName }}</td>
+        <td>{{ item.answerTextContent }}</td>
+        <td>
+          {{ item.answerImgContent }}
+        </td>
+        <td>{{ item.isTrue }}</td>
+        <td>{{ item.createDate }}</td>
+        <td>{{ item.updateDate }}</td>
+        <td>{{ item.questionID }}</td>
+        <td>
+          <i class="bi bi-pencil-square me-2" (click)="showModal(item)" style="cursor: pointer;"></i>
+          <i class="bi bi-trash-fill" (click)="deleteAnswer(item.answerID)" style="cursor: pointer; color: red;"></i>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Modal Thêm/Sửa âu trả lời -->
+    <div id="myModal" class="modal" *ngIf="isModalOpen">
+      <div class="modal-content">
+        <span class="close" (click)="closeModal()">&times;</span>
+        <h2>{{ answerForm.answerID ? 'Cập nhật câu trả lời' : 'Thông tin câu trả lời' }}</h2>
+        <!-- Mã câu trả lời -->
+        <div class="form-row">
+          <label for="answerCode">Mã câu trả lời:</label>
+          <input
+            type="text"
+            id="answerCode"
+            [(ngModel)]="answerForm.answerCode"
+            name="answerCode"
+            #answerCode="ngModel"
+            placeholder="Nhập mã câu trả lời"
+            [required]="true"
+          />
+          <div *ngIf="answerCode.invalid && answerCode.touched" class="text-danger">
+            <div *ngIf="answerCode.errors?.['required']">Mã câu hỏi là bắt buộc.</div>
+          </div>
+        </div>
+
+        <!-- Tên câu trả lời -->
+        <div class="form-row">
+          <label for="awnserName">Tên câu trả lời:</label>
+          <input
+            type="text"
+            id="awnserName"
+            [(ngModel)]="answerForm.awnserName"
+            name="awnserName"
+            #awnserName="ngModel"
+            placeholder="Nhập tên câu trả lời"
+            [required]="true"
+            minlength="5" maxlength="100"
+          />
+          <div *ngIf="awnserName.invalid && awnserName.touched" class="text-danger">
+            <div *ngIf="awnserName.errors?.['required']">Tên bài thi là bắt buộc.</div>
+            <div *ngIf="awnserName.errors?.['minlength']">Tên bài thi tối thiểu 5 ký tự.</div>
+            <div *ngIf="awnserName.errors?.['maxlength']">Tên bài thi tối đa 100 ký tự.</div>
+          </div>
+        </div>
+
+        <!-- TextContent -->
+        <div class="form-row">
+          <label for="awnserTextContent">TextContent:</label>
+          <input
+            type="text"
+            id="awnserTextContent"
+            [(ngModel)]="answerForm.answerTextContent"
+            name="awnserTextContent"
+            #awnserTextContent="ngModel"
+            [required]="true"
+          />
+          <div *ngIf="awnserTextContent.invalid && awnserTextContent.touched" class="text-danger">
+            <div *ngIf="awnserTextContent.errors?.['required']">TextContent là bắt buộc.</div>
+          </div>
+        </div>
+
+        <!-- ImgContent -->
+        <div class="form-row">
+          <label for="answerImgContent">ImgContent:</label>
+          <input
+            type="text"
+            id="answerImgContent"
+            [(ngModel)]="answerForm.answerImgContent"
+            name="answerImgContent"
+            #answerImgContent="ngModel"
+            placeholder="Nhập số câu hỏi"
+            [required]="true"
+          />
+          <div *ngIf="answerImgContent.invalid && answerImgContent.touched" class="text-danger">
+            <div *ngIf="answerImgContent.errors?.['required']">ImgContent là bắt buộc.</div>
+          </div>
+        </div>
+
+        <!-- Câu hỏi -->
+        <div class="form-row">
+          <label for="questionID">Câu hỏi:</label>
+          <select
+            id="questionID"
+            [(ngModel)]="answerForm.questionID"
+            name="questionID"
+            #question="ngModel"
+            [required]="true"
+          >
+            <option value="" disabled selected>Chọn môn học</option>
+            <option *ngFor="let question of questions" [value]="question.questionID">{{ question.questionName }}</option>
+          </select>
+          <div *ngIf="question.invalid && question.touched" class="text-danger">
+            <div *ngIf="question.errors?.['required']">Câu hỏi là bắt buộc.</div>
+          </div>
+        </div>
+
+        <!-- Modal buttons -->
+        <div class="modal-buttons">
+          <button class="btn btn-success" (click)="saveAnswer()" [disabled]="answerCode.invalid || awnserName.invalid || awnserTextContent.invalid || answerImgContent.invalid || question.invalid">Lưu</button>
+          <button class="btn btn-danger" (click)="closeModal()">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,98 @@
+<main id="app">
+  <div class="container mt-4">
+    <!-- Nút Thêm mới bài thi -->
+    <button class="btn btn-primary mb-4" (click)="showModal()">Thêm mới loại câu hỏi</button>
+
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Loại câu hỏi</li>
+      </ol>
+    </nav>
+
+    <!-- Table Content -->
+    <table class="table table-bordered">
+      <thead class="table-light">
+      <tr>
+        <th colspan="8" class="text-start font-weight-bold">Danh sách loại câu hỏi</th>
+      </tr>
+      <tr>
+        <th>STT</th>
+        <th>Mã loại câu hỏi</th>
+        <th>Tên loại câu hỏi</th>
+        <th>Ngày cập nhật</th>
+        <th>Ngày tạo</th>
+        <th>Thao tác</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of data">
+        <td>{{ item.QuestionTypeID }}</td>
+        <td>{{ item.QuestionTypeCode }}</td>
+        <td>{{ item.QuestionTypeName }}</td>
+        <td>{{ item.UpdateDate | date:'dd/MM/yyyy' }}</td>
+        <td>{{ item.CreateDate | date:'dd/MM/yyyy' }}</td>
+
+        <td>
+          <i class="bi bi-pencil-square me-2" (click)="showModal(item)" style="cursor: pointer;"></i>
+          <i class="bi bi-trash-fill" (click)="deleteQuestion(item.QuestionTypeID)" style="cursor: pointer; color: red;"></i>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Modal Thêm/Sửa bài thi -->
+    <div id="myModal" class="modal" *ngIf="isModalOpen">
+      <div class="modal-content">
+        <span class="close" (click)="closeModal()">&times;</span>
+        <h2>{{ question.QuestionTypeID ? 'Cập nhật loại câu hỏi' : 'Thông tin loại câu hỏi' }}</h2>
+
+        <!-- Mã bài thi -->
+        <!-- Mã bài thi -->
+        <div class="form-row">
+          <label for="questionCode">Mã loại câu hỏi:</label>
+          <input
+            type="text"
+            id="questionCode"
+            [(ngModel)]="question.QuestionTypeCode"
+            name="questiontypeCode"
+            #questionCode="ngModel"
+            placeholder="Nhập mã loại câu hỏi"
+            [required]="true"
+          />
+          <div *ngIf="questionCode.invalid && questionCode.touched" class="text-danger">
+            <div *ngIf="questionCode.errors?.['required']">Mã loại câu hỏi là bắt buộc.</div>
+          </div>
+        </div>
+
+        <!-- Tên bài thi -->
+        <div class="form-row">
+          <label for="questionName">Tên loại câu hỏi:</label>
+          <input
+            type="text"
+            id="questionName"
+            [(ngModel)]="question.QuestionTypeName"
+            name="questionName"
+            #questionName="ngModel"
+            placeholder="Nhập tên loại câu hỏi"
+            [required]="true"
+            minlength="5" maxlength="100"
+          />
+          <div *ngIf="questionName.invalid && questionName.touched" class="text-danger">
+            <div *ngIf="questionName.errors?.['required']">loại câu hỏi là bắt buộc.</div>
+            <div *ngIf="questionName.errors?.['minlength']">loại câu hỏi tối thiểu 5 ký tự.</div>
+            <div *ngIf="questionName.errors?.['maxlength']">loại câu hỏi tối đa 100 ký tự.</div>
+          </div>
+        </div>
+
+        <!-- Modal buttons -->
+        <div class="modal-buttons">
+          <button class="btn btn-danger" (click)="closeModal()">Đóng</button>
+          <button class="btn btn-success" (click)="saveQuestion()" [disabled]="!questionCode.valid || !questionName.valid ">Lưu</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
