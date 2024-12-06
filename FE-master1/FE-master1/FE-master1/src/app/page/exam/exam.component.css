@@ -12,7 +12,7 @@
   background-color: rgba(0, 0, 0, 0.6); /* Màu nền mờ tinh tế */
   overflow: auto;
 }
-
+.red{  background-color: red;}
 .modal-content {
   background-color: #ffffff;
   border-radius: 10px; /* Góc bo tròn */
@@ -58,8 +58,46 @@ h2 {
 }
 
 .form-row {
+
   margin-bottom: 15px;
 }
+/* Đẩy nút "Lưu" và "Đóng" sang hai bên */
+.form-row.cmm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.form-row.cmm button {
+  width: 19%; /* Đảm bảo các nút có kích thước phù hợp */
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form-row.cmm .btn-success {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.form-row.cmm .btn-success:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.form-row.cmm .red {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.form-row.cmm .red:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+
 
 label {
   font-size: 14px;
@@ -129,3 +167,47 @@ input.ng-invalid.ng-touched,
 select.ng-invalid.ng-touched {
   border-color: red;
 }
+
+
+
+/*tìm kiếm*/
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pagination-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.pagination-btn:disabled {
+  background-color: #cccccc;
+  border-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.pagination-text {
+  font-size: 14px;
+  color: #333;
+  margin: 0 10px;
+}
+
+#searchExamName{
+  width: 200px;
+}
+

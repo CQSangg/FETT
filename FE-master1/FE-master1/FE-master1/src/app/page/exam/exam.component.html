@@ -11,6 +11,28 @@
       </ol>
     </nav>
 
+    <!-- Form Tìm kiếm và Reset -->
+    <div class="form-row mb-3">
+      <label for="searchExamName">Tìm kiếm bài thi:</label>
+      <input
+        type="text"
+        id="searchExamName"
+        [(ngModel)]="searchKeyword"
+        name="searchExamName"
+        placeholder="Nhập tên bài thi"
+        (ngModelChange)="searchExam()"
+      />
+
+
+      <!-- Nút Reset -->
+      <button type="button" class="btn btn-secondary ms-2" (click)="resetSearch()">Làm mới</button>
+      <!-- Nút Xuất Excel -->
+      <button type="button" class="btn  btn-success ms-2" (click)="exportToExcel()">Xuất Excel</button>
+
+    </div>
+
+
+
     <!-- Table Content -->
     <table class="table table-bordered">
       <thead class="table-light">
@@ -27,12 +49,12 @@
         <th>Tổng điểm</th>
         <th>Ngày cập nhật</th>
         <th>Ngày tạo</th>
-        <th>Mã bài kiểm tra</th>
+        <th>Tên bài kiểm tra</th>
         <th>Thao tác</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let item of data">
+      <tr *ngFor="let item of paginatedData">
         <td>{{ item.ExamID }}</td>
         <td>{{ item.ExamCode }}</td>
         <td>{{ item.ExamName }}</td>
@@ -40,24 +62,35 @@
         <td>{{ item.Duration }}</td>
         <td>{{ item.NumberOfQuestions }}</td>
         <td>{{ item.TotalMarks }}</td>
-        <td>{{ item.UpdateDate }}</td>
+        <td>{{ item.UpdateDate | date:'dd/MM/yyyy' }}</td>
         <td>{{ item.CreateDate | date:'dd/MM/yyyy' }}</td>
-        <td>{{ item.TestID }}</td>
+        <td>{{ item.TestName }}</td>
         <td>
           <i class="bi bi-pencil-square me-2" (click)="showModal(item)" style="cursor: pointer;"></i>
-          <i class="bi bi-trash-fill" (click)="deleteExam(item.ExamID)" style="cursor: pointer; color: red;"></i>
+          <i class="bi bi-trash-fill" (click)="deleteExam(item.ExamName)" style="cursor: pointer; color: red;"></i>
         </td>
       </tr>
       </tbody>
     </table>
 
+    <!-- Pagination -->
+    <div class="pagination" style="justify-content: center;">
+      <button class="pagination-btn" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <span class="pagination-text">Trang {{ currentPage }} / {{ totalPages }}</span>
+      <button class="pagination-btn" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+
+
     <!-- Modal Thêm/Sửa bài thi -->
     <div id="myModal" class="modal" *ngIf="isModalOpen">
       <div class="modal-content">
         <span class="close" (click)="closeModal()">&times;</span>
-        <h2>{{ examForm.ExamID ? 'Cập nhật bài thi' : 'Thông tin bài thi' }}</h2>
+        <h2>{{ examForm.ExamID ? 'Cập nhật bài thi' : 'Thêm  bài thi' }}</h2>
 
-        <!-- Mã bài thi -->
         <!-- Mã bài thi -->
         <div class="form-row">
           <label for="examCode">Mã bài thi:</label>
@@ -87,11 +120,13 @@
             placeholder="Nhập tên bài thi"
             [required]="true"
             minlength="5" maxlength="100"
+            pattern="^[a-zA-Z\s]+$"
           />
           <div *ngIf="examName.invalid && examName.touched" class="text-danger">
             <div *ngIf="examName.errors?.['required']">Tên bài thi là bắt buộc.</div>
             <div *ngIf="examName.errors?.['minlength']">Tên bài thi tối thiểu 5 ký tự.</div>
             <div *ngIf="examName.errors?.['maxlength']">Tên bài thi tối đa 100 ký tự.</div>
+            <div *ngIf="examName.errors?.['pattern']">Tên bài thi chỉ được chứa chữ cái và dấu cách.</div>
           </div>
         </div>
 
@@ -132,23 +167,7 @@
           </div>
         </div>
 
-        <!-- Môn học -->
-        <div class="form-row">
-          <label for="testID">Môn học:</label>
-          <select
-            id="testID"
-            [(ngModel)]="examForm.TestID"
-            name="testID"
-            #subject="ngModel"
-            [required]="true"
-          >
-            <option value="" disabled selected>Chọn môn học</option>
-            <option *ngFor="let subject of subjects" [value]="subject.TestID">{{ subject.TestName }}</option>
-          </select>
-          <div *ngIf="subject.invalid && subject.touched" class="text-danger">
-            <div *ngIf="subject.errors?.['required']">Môn học là bắt buộc.</div>
-          </div>
-        </div>
+
 
         <!-- Thời gian thi (Duration) -->
         <div class="form-row">
@@ -191,13 +210,30 @@
             <div *ngIf="totalMarks.errors?.['max']">Tổng số điểm không được vượt quá 100.</div>
           </div>
         </div>
-
-        <!-- Modal buttons -->
-        <div class="modal-buttons">
-          <button class="btn btn-danger" (click)="closeModal()">Đóng</button>
-          <button class="btn btn-success" (click)="saveExam()" [disabled]="!examCode.valid || !examName.valid || !numberOfQuestions.valid || !duration.valid || !totalMarks.valid || !subject.valid">Lưu</button>
+        <!-- Môn học -->
+        <div class="form-row">
+          <label for="testID">Tên môn học:</label>
+          <select
+            id="testID"
+            [(ngModel)]="examForm.TestID"
+            name="testID"
+            #subject="ngModel"
+            [required]="true"
+          >
+            <option value="" disabled selected>Chọn tên môn học</option>
+            <option *ngFor="let subject of subjects" [value]="subject.TestID">{{ subject.TestName }}</option>
+          </select>
+          <div *ngIf="subject.invalid && subject.touched" class="text-danger">
+            <div *ngIf="subject.errors?.['required']">Tên môn học là bắt buộc.</div>
+          </div>
+        </div>
+        <!-- Modal Footer -->
+        <div class="form-row cmm">
+          <button class="btn red" (click)="closeModal()">Đóng</button>
+          <button class="btn btn-success" (click)="saveExam()">Lưu</button>
 
         </div>
+
       </div>
     </div>
   </div>

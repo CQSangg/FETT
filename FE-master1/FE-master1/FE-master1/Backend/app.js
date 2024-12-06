@@ -51,8 +51,8 @@ app.get('/getExem', async (req, res) => {
   try {
     const pool = await connectToDatabase();  // Kết nối SQL Server
     const result = await pool.request()
-      .query('SELECT Exam.ExamID, Exam.ExamCode, Exam.ExamName,Exam.ExamDate, Exam.Duration,Exam.NumberOfQuestions,Exam.TotalMarks,' +
-        '               Exam.CreateDate, Exam.UpdateDate, Test.TestID AS TestID' +
+      .query('SELECT Exam.ExamID, Exam.ExamName,Exam.ExamDate, Exam.Duration,Exam.NumberOfQuestions,Exam.TotalMarks,' +
+        '               Exam.CreateDate, Exam.UpdateDate, Test.TestName AS TestName' +
         '        FROM Exam' +
         '        INNER JOIN Test ON Exam.TestID = Test.TestID' +
         '        WHERE Exam.IsDelete = 0');  // Truy vấn lấy SubjectID và SubjectName
