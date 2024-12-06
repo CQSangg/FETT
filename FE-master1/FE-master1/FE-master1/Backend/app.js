@@ -21,7 +21,7 @@ app.get('/getData', async (req, res) => {
     const result = await pool.request()
       .query(`
         SELECT Test.TestID, Test.TestCode, Test.TestName, Test.NumberOfQuestions,
-               Test.CreateDate, Test.UpdateDate, Subjects.SubjectsID AS SubjectsID
+               Test.CreateDate, Test.UpdateDate, Subjects.SubjectsName AS SubjectsID
         FROM Test
         INNER JOIN Subjects ON Test.SubjectsID = Subjects.SubjectsID
         WHERE Test.IsDelete = 0

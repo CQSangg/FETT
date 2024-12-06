@@ -10,7 +10,25 @@
         <li class="breadcrumb-item active" aria-current="page">Bài kiểm tra</li>
       </ol>
     </nav>
+    <!-- Form Tìm kiếm và Reset -->
+    <div class="form-row mb-3">
+      <label for="searchExamName">Tìm kiếm bài thi:</label>
+      <input
+        type="text"
+        id="searchExamName"
+        [(ngModel)]="searchKeyword"
+        name="searchExamName"
+        placeholder="Nhập tên bài thi"
+        (ngModelChange)="searchTest()"
+      />
 
+
+      <!-- Nút Reset -->
+      <button type="button" class="btn btn-secondary ms-2" (click)="resetSearch()">Làm mới</button>
+      <!-- Nút Xuất Excel -->
+      <button type="button" class="btn  btn-success ms-2" (click)="exportToExcel()">Xuất Excel</button>
+
+    </div>
     <!-- Table Content -->
     <table class="table table-bordered">
       <thead class="table-light">
@@ -29,7 +47,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let item of data">
+      <tr *ngFor="let item of paginatedData">
         <td>{{ item.TestID }}</td>
         <td>{{ item.TestCode }}</td>
         <td>{{ item.TestName }}</td>
@@ -44,7 +62,15 @@
       </tr>
       </tbody>
     </table>
-
+    <div class="pagination" style="justify-content: center;">
+      <button class="pagination-btn" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <span class="pagination-text">Trang {{ currentPage }} / {{ totalPages }}</span>
+      <button class="pagination-btn" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
     <!-- Modal Thêm/Sửa bài kiểm tra -->
     <div id="myModal" class="modal" *ngIf="isModalOpen">
       <div class="modal-content">
@@ -114,7 +140,7 @@
             [required]="true"
           >
             <option value="" disabled selected>Chọn môn học</option>
-            <option *ngFor="let subject of subjects" [value]="subject.SubjectsID">{{ subject.SubjectsID }}</option>
+            <option *ngFor="let subject of subjects" [value]="subject.SubjectsID">{{ subject.SubjectsName }}</option>
           </select>
           <div *ngIf="subject.invalid && subject.touched" class="text-danger">
             <div *ngIf="subject.errors?.['required']">Môn học là bắt buộc.</div>

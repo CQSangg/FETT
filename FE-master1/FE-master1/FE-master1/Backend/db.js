@@ -4,7 +4,7 @@ const sql = require('mssql');
 // Cấu hình kết nối đến SQL Server
 const config = {
   user: 'sa',           // Tên người dùng SQL Server (thường là 'sa')
-  password: '123456', // Mật khẩu của người dùng
+  password: 'tinduong0211', // Mật khẩu của người dùng
   server: 'localhost',  // Địa chỉ máy chủ SQL Server (thường là 'localhost' nếu đang chạy trên máy local)
   database: 'THUCTAP_STC_1', // Tên cơ sở dữ liệu
   options: {
