@@ -1,0 +1,66 @@
+<header>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="/exam" routerLinkActive="active">Bài thi</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/test">Bài kiểm tra</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link"href="/question">Loại câu hỏi</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/answer">Trả lời</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/student">Học sinh</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link"  href="/class">Lớp</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link"  href="/subjects">Môn học</a>
+          </li>
+        </ul>
+
+        <div class="d-flex ms-auto align-items-center">
+          <!-- Form tìm kiếm -->
+          <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Tìm kiếm" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Tìm kiếm</button>
+          </form>
+          <!-- Icon -->
+          <div class="icon-container d-flex">
+            <i class="bi bi-gear mx-2"></i>
+            <i class="bi bi-bell mx-2"></i>
+            <!-- Icon để mở modal -->
+            <i class="bi bi-person-circle mx-2" data-bs-toggle="modal" data-bs-target="#loginModal" style="cursor: pointer;"></i>
+
+            <!-- Modal đăng nhập -->
+            <!-- Modal đăng nhập -->
+            <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title text-center w-100" id="loginModalLabel">Đăng nhập</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>

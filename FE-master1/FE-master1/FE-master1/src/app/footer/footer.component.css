@@ -1,0 +1,31 @@
+
+footer.technologies {
+  background-color: #ffffff; /* Nền trắng */
+  color: #808080; /* Chữ xám */
+  padding: 20px 0;
+  text-align: center;
+}
+
+footer.technologies .container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+footer.technologies ul {
+  list-style: none;
+  padding: 0;
+}
+
+footer.technologies ul li {
+  display: inline;
+  margin: 0 10px;
+}
+
+footer.technologies ul li a {
+  color: #808080; /* Liên kết màu xám */
+  text-decoration: none;
+}
+
+footer.technologies ul li a:hover {
+  text-decoration: underline;
+}

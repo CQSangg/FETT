@@ -1,0 +1,149 @@
+<main id="app">
+  <div class="alert-content position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+    <!-- Thông báo thành công -->
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ successMessage }}
+      <button type="button" class="btn-close" aria-label="Close" (click)="successMessage = null"></button>
+    </div>
+
+    <!-- Thông báo lỗi -->
+    <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ errorMessage }}
+      <button type="button" class="btn-close" aria-label="Close" (click)="errorMessage = null"></button>
+    </div>
+  </div>
+
+  <div class="container mt-4">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Trang chủ</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Student
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Tìm kiếm -->
+    <div class="d-flex justify-content-between mb-3">
+      <form (ngSubmit)="serchSubject()">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" [(ngModel)]="searchName" name="searchName" placeholder="Nhập tên môn học" aria-label="Recipient's username" aria-describedby="button-addon2">
+          <button class="btn btn-outline-primary" type="submit" id="button-addon2">Tìm kiếm</button>
+          <button class="btn btn-outline-secondary ms-2" type="button" style="border-radius: 0px" (click)="clear()">Làm mới</button>
+        </div>
+      </form>
+      <div class="ms-2">
+        <button class="btn btn-primary me-2 mb-3">
+          <i class="bi bi-file-earmark-spreadsheet"></i> Xuất Excel
+        </button>
+        <!-- Nút Thêm mới -->
+        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+          <i class="bi bi-plus-circle"></i> Thêm mới
+        </button>
+      </div>
+
+
+    </div>
+
+    <!-- Bảng -->
+    <table class="table table-bordered">
+      <thead class="table-light">
+      <tr>
+        <th colspan="12" class="text-start font-weight-bold">
+          Danh sách subject
+        </th>
+      </tr>
+      <tr>
+        <th>Mã môn học</th>
+        <th>Tên môn học</th>
+        <th>Ngày tạo</th>
+        <th>Ngày sửa đổi</th>
+        <th>Trạng thái</th>
+        <th>Hành động</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let subject of paginatedSubjects">
+        <td>{{ subject.subjectsCode }}</td>
+        <td>{{ subject.subjectsName }}</td>
+        <td>{{ subject.createDate | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ subject.updateDate | date: 'dd/MM/yyyy'}}</td>
+        <td>
+          {{ subject.isDelete ? 'Đã khoá' : 'Đang hoạt động' }}
+        </td>
+        <td>
+          <a [routerLink]="['/subjects/update-subject-subject', subject.subjectsID]" style="cursor: pointer;">
+            <i class="bi bi-pencil-square me-2"></i>
+          </a>
+          <i (click)="deleteSubject(subject.subjectsID)" class="bi bi-trash-fill" style="cursor: pointer; color: red;"></i>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!--Phân trang-->
+    <nav aria-label="Subjects pagination">
+      <ul class="pagination justify-content-center">
+        <li class="page-item me-2" [class.disabled]="currentPage === 1">
+          <a class="page-link" (click)="goToPage(currentPage - 1)" style="cursor: pointer;border-radius: 50%">&laquo;</a>
+        </li>
+        <li class="page-item me-2" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage">
+          <a class="page-link" (click)="goToPage(page)" style="cursor: pointer;border-radius: 50%">{{ page }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link" (click)="goToPage(currentPage + 1)" style="cursor: pointer;border-radius: 50%">&raquo;</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Modal thêm -->
+    <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form [formGroup]="addSubjectForm" (ngSubmit)="addSubject()">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addStudentModalLabel">Thêm môn học</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="subjectsCode" class="form-label">Mã môn học</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="subjectsCode"
+                  formControlName="subjectsCode"
+                  [ngClass]="{ 'is-invalid': addSubjectForm.get('subjectsCode')?.invalid && addSubjectForm.get('subjectsCode')?.touched }"
+                />
+                <div class="invalid-feedback">
+                  Vui lòng nhập mã môn học.
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="subjectsName" class="form-label">Tên môn học</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="subjectsName"
+                  formControlName="subjectsName"
+                  [ngClass]="{ 'is-invalid': addSubjectForm.get('subjectsName')?.invalid && addSubjectForm.get('subjectsName')?.touched }"
+                />
+                <div class="invalid-feedback">
+                  Vui lòng nhập tên môn học.
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+              <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>

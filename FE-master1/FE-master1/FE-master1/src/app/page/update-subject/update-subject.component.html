@@ -1,0 +1,15 @@
+<div class="container">
+  <h2>Cập nhật môn học</h2>
+
+  <form (ngSubmit)="updateSubject()">
+    <div class="mb-3">
+      <label for="subjectsCode" class="form-label">Mã môn học</label>
+      <input type="text" class="form-control" id="subjectsCode" [(ngModel)]="subject.subjectsCode" name="subjectsCode" required>
+    </div>
+    <div class="mb-3">
+      <label for="subjectsName" class="form-label">Tên môn học</label>
+      <input type="text" class="form-control" id="subjectsName" [(ngModel)]="subject.subjectsName" name="subjectsName" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+  </form>
+</div>
